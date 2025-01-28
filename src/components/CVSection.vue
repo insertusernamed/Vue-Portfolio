@@ -1,8 +1,6 @@
 <template>
     <section id="cv" class="cv-section">
         <div class="container-fluid px-4">
-            <h2 class="section-title">Curriculum Vitae</h2>
-
             <div class="work-experience group">
                 <h3 class="group-title">Work Experience</h3>
                 <div class="experience-item">

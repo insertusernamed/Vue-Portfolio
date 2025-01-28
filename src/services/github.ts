@@ -2,61 +2,97 @@ import axios from 'axios'
 import colors from '../assets/colors.json'
 
 interface Language {
-  language: string
-  percent: number
-  color: string
+    language: string
+    percent: number
+    color: string
 }
 
 export interface GitHubProject {
-  name: string
-  description: string | null
-  html_url: string
-  languages_url: string
-  topLanguages: Language[]
+    name: string
+    description: string | null
+    html_url: string
+    languages_url: string
+    topLanguages: Language[]
+}
+
+interface CachedData {
+    projects: GitHubProject[]
+    timestamp: number
 }
 
 const COLORS = colors as unknown as Record<string, string>
+const CACHE_KEY = 'github_projects_cache'
+const CACHE_DURATION = 30 * 60 * 1000 // 30 minutes
 
 export async function fetchGitHubProjects(): Promise<GitHubProject[]> {
-  const response = await axios.get(
-    'https://api.github.com/users/insertusernamed/repos?sort=updated&direction=desc',
-  )
+    // Check cache first
+    const cached = localStorage.getItem(CACHE_KEY)
+    if (cached) {
+        const cachedData: CachedData = JSON.parse(cached)
+        const now = Date.now()
 
-  const projects = await Promise.all(
-    response.data.map(
-      async (repo: {
-        name: string
-        description: string | null
-        html_url: string
-        languages_url: string
-      }) => {
-        const languagesResponse = await axios.get(repo.languages_url)
-        const languagesData = languagesResponse.data
+        // Return cached data if it's still fresh
+        if (now - cachedData.timestamp < CACHE_DURATION) {
+            console.log('Returning cached data')
+            return cachedData.projects
+        }
+    }
 
-        const totalChars = (Object.values(languagesData) as number[]).reduce(
-          (acc: number, curr: number) => acc + curr,
-          0,
+    // Fetch fresh data if cache is empty or stale
+    try {
+        const response = await axios.get(
+            'https://api.github.com/users/insertusernamed/repos?sort=updated&direction=desc',
         )
 
-        const topLanguages = Object.entries(languagesData)
-          .sort(([, a], [, b]) => Number(b) - Number(a))
-          .slice(0, 3)
-          .map(([language, chars]) => ({
-            language,
-            percent: Math.round((Number(chars) / totalChars) * 100),
-            color: COLORS[language as keyof typeof COLORS] || '#000',
-          }))
+        const projects = await Promise.all(
+            response.data.map(
+                async (repo: {
+                    name: string
+                    description: string | null
+                    html_url: string
+                    languages_url: string
+                }) => {
+                    const languagesResponse = await axios.get(repo.languages_url)
+                    const languagesData = languagesResponse.data
 
-        return {
-          name: repo.name,
-          description: repo.description,
-          html_url: repo.html_url,
-          languages_url: repo.languages_url,
-          topLanguages,
+                    const totalChars = (Object.values(languagesData) as number[]).reduce(
+                        (acc: number, curr: number) => acc + curr,
+                        0,
+                    )
+
+                    const topLanguages = Object.entries(languagesData)
+                        .sort(([, a], [, b]) => Number(b) - Number(a))
+                        .slice(0, 3)
+                        .map(([language, chars]) => ({
+                            language,
+                            percent: Math.round((Number(chars) / totalChars) * 100),
+                            color: COLORS[language] || '#000',
+                        }))
+
+                    return {
+                        name: repo.name,
+                        description: repo.description,
+                        html_url: repo.html_url,
+                        languages_url: repo.languages_url,
+                        topLanguages,
+                    }
+                },
+            ),
+        )
+
+        // Cache the fresh data
+        const cacheData: CachedData = {
+            projects,
+            timestamp: Date.now(),
         }
-      },
-    ),
-  )
+        localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData))
 
-  return projects
+        return projects
+    } catch (error) {
+        // If API call fails, return cached data if available
+        if (cached) {
+            return JSON.parse(cached).projects
+        }
+        throw error
+    }
 }
