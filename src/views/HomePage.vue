@@ -39,7 +39,7 @@ const skills = ref([
         <DebugMenu v-model:particle-count="particleCount" />
         <div class="content-container">
             <section id="intro" class="intro-section">
-                <div class="container-fluid px-4">
+                <div class="container-fluid px-4 h-100 d-flex align-items-center">
                     <div class="content-wrapper">
                         <div class="avatar-wrapper">
                             <div class="avatar"></div>
@@ -287,9 +287,12 @@ const skills = ref([
 .intro-section {
     background-color: var(--bg-intro);
     position: relative;
-    padding: 6rem 0;
+    padding: 0;
     z-index: 2;
     background: transparent;
+    height: 100vh;
+    display: flex;
+    align-items: center;
 }
 
 .intro-section::before {
@@ -322,11 +325,9 @@ const skills = ref([
     }
 
     .intro-section {
-        padding: 3rem 0;
-    }
-
-    .skills-section {
-        padding: 3rem 0;
+        padding: 0;
+        min-height: 100vh;
+        height: auto;
     }
 }
 </style>
