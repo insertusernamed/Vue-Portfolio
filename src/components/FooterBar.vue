@@ -20,11 +20,11 @@ import LoadingIcon from './LoadingIcon.vue'
                     <h5>Contact</h5>
                     <ul>
                         <li>
-                            <i class="icon ion-at"></i>
+                            <LoadingIcon iconClass="icon ion-at" />
                             <a href="mailto:yevtushenkodan04@gmail.com">yevtushenkodan04@gmail.com</a>
                         </li>
                         <li>
-                            <i class="icon ion-ios-telephone"></i>
+                            <LoadingIcon iconClass="icon ion-ios-telephone" />
                             <span>(437)-216-6742</span>
                         </li>
                     </ul>
@@ -37,7 +37,7 @@ import LoadingIcon from './LoadingIcon.vue'
                             <LoadingIcon iconClass="icon ion-social-linkedin" />
                         </a>
                         <a href="https://github.com/insertusernamed" target="_blank" title="GitHub">
-                            <i class="icon ion-social-github"></i>
+                            <LoadingIcon iconClass="icon ion-social-github" />
                         </a>
                     </div>
                 </div>
@@ -49,10 +49,10 @@ import LoadingIcon from './LoadingIcon.vue'
                 </p>
                 <div class="tech-stack">
                     <span>Technologies used:</span>
-                    <i class="icon ion-social-html5" title="HTML5"></i>
-                    <i class="icon ion-social-css3" title="CSS3"></i>
-                    <i class="icon ion-social-javascript" title="JavaScript"></i>
-                    <i class="icon ion-social-github" title="GitHub API"></i>
+                    <LoadingIcon iconClass="icon ion-social-html5" title="HTML5" />
+                    <LoadingIcon iconClass="icon ion-social-css3" title="CSS3" />
+                    <LoadingIcon iconClass="icon ion-social-javascript" title="JavaScript" />
+                    <LoadingIcon iconClass="icon ion-social-github" title="GitHub API" />
                 </div>
             </div>
         </div>
@@ -61,8 +61,11 @@ import LoadingIcon from './LoadingIcon.vue'
 
 <style scoped>
 .page-footer {
-    background: var(--bg-projects);
-    color: var(--text-light);
+    background: rgba(13, 17, 23, 0.95);
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     margin-top: auto;
 }
 
@@ -75,7 +78,8 @@ import LoadingIcon from './LoadingIcon.vue'
 }
 
 .footer-section h5 {
-    color: var(--accent-4);
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     font-size: 1.1rem;
     margin-bottom: 1rem;
 }
@@ -93,8 +97,10 @@ import LoadingIcon from './LoadingIcon.vue'
     gap: 0.5rem;
 }
 
-.footer-section a {
-    color: var(--text-code);
+.footer-section a,
+.footer-section span {
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -129,7 +135,7 @@ import LoadingIcon from './LoadingIcon.vue'
 }
 
 .copyright {
-    color: var(--text-code);
+    color: rgba(255, 255, 255, 0.7);
     margin: 0;
 }
 
