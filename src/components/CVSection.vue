@@ -1,21 +1,27 @@
 <template>
     <section id="cv" class="cv-section">
         <div class="container-fluid px-4">
+            <h2 class="section-title">Professional Journey</h2>
+
             <div class="work-experience group">
                 <h3 class="group-title">Work Experience</h3>
                 <div class="experience-item">
                     <div class="row">
                         <div class="col-md-6">
-                            <h4>Software Development Engineer</h4>
-                            <span class="company-badge">Ceridian HCM Inc</span>
+                            <h4>Test Engineer Intern</h4>
+                            <span class="company-badge">Dayforce (formerly Ceridian HCM Inc)</span>
                         </div>
                         <div class="col-md-6">
-                            <span class="period">09/2023 - Present</span>
+                            <span class="period">09/2023 - 01/2024</span>
                         </div>
                     </div>
-                    <p>Led the development of automated testing frameworks using SpecFlow and Selenium, achieving 40%
-                        reduction in QA cycle time.
-                        Implemented CI/CD pipelines and contributed to core platform features using C# and .NET Core.
+                    <p>
+                        Developed automation tests using SpecFlow to enhance testing efficiency and quality assurance
+                        processes.
+                        Collaborated with development teams to identify, report, and troubleshoot software defects.
+                        Performed maintenance on existing codebase to improve code quality and resolve issues.
+                        Automated critical test scenarios, significantly reducing manual testing efforts.
+                        Actively contributed to testing deliverables, ensuring timely release of high-quality software.
                     </p>
                 </div>
                 <div class="experience-item">
@@ -60,38 +66,27 @@
                     </div>
                     <p>Completed Computer Programming Co-op Diploma at Georgian College.</p>
                 </div>
-                <div class="education-item">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h4>High School Diploma</h4>
-                            <span class="school-badge">Richmond Hill High School</span>
-                        </div>
-                        <div class="col-md-6">
-                            <span class="period">08/2018 - 06/2022</span>
-                        </div>
-                    </div>
-                    <p>Completed High School Diploma at Richmond Hill High School.</p>
-                </div>
             </div>
 
             <div class="contact-info group">
                 <h3 class="group-title">Contact Information</h3>
                 <div class="info-grid">
                     <div class="info-item">
-                        <i class="icon ion-android-calendar"></i>
-                        <span>11/22/2004</span>
+                        <i class="icon ion-at"></i>
+                        <a href="mailto:yevtushenkodan04@gmail.com">yevtushenkodan04@gmail.com</a>
                     </div>
                     <div class="info-item">
-                        <i class="icon ion-person"></i>
-                        <span>Daniel Yevtushenko</span>
+                        <i class="icon ion-social-github"></i>
+                        <a href="https://github.com/insertusernamed" target="_blank" rel="noopener">GitHub Profile</a>
                     </div>
                     <div class="info-item">
                         <i class="icon ion-ios-telephone"></i>
-                        <span>(437)-216-6742</span>
+                        <a href="tel:+14372166742">(437)-216-6742</a>
                     </div>
                     <div class="info-item">
-                        <i class="icon ion-at"></i>
-                        <span>yevtushenkodan04@gmail.com</span>
+                        <i class="icon ion-social-linkedin"></i>
+                        <a href="https://linkedin.com/in/daniel-yevtushenko" target="_blank" rel="noopener">LinkedIn
+                            Profile</a>
                     </div>
                 </div>
             </div>
@@ -101,100 +96,107 @@
 
 <style scoped>
 .cv-section {
-    background: var(--bg-cv);
-    position: relative;
-    padding: 6rem 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 3rem 0;
+    border-top: 1px solid rgba(159, 114, 255, 0.1);
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #e0e0ff;
+    font-size: 2rem;
 }
 
 .group {
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
 }
 
 .group-title {
-    color: var(--text-primary);
-    font-size: 1.8rem;
-    margin-bottom: 2rem;
+    color: #e0e0ff;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
     text-align: center;
 }
 
 .experience-item,
 .education-item {
-    background: linear-gradient(135deg, #fff, #f8f9fa);
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px var(--card-shadow);
-    margin-bottom: 1.5rem;
-    border: none;
-    transition: transform 0.3s ease, background 0.3s ease;
-}
-
-.experience-item:hover,
-.education-item:hover {
-    background: linear-gradient(135deg, #fff, #fff);
-    transform: translateY(-3px);
+    background: rgba(20, 20, 35, 0.6);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(159, 114, 255, 0.1);
 }
 
 .company-badge,
 .school-badge {
     display: inline-block;
-    padding: 0.25rem 0.75rem;
+    padding: 0.3rem 0.8rem;
     border-radius: 15px;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     margin-top: 0.5rem;
-}
-
-.company-badge {
-    background: var(--gradient-primary);
-    color: white;
-}
-
-.school-badge {
-    background: var(--gradient-hover);
+    background: linear-gradient(135deg, #9f72ff 0%, #6d4aff 100%);
     color: white;
 }
 
 .period {
-    color: #6c757d;
+    color: #b8b8ff;
     display: block;
     text-align: right;
+    font-size: 0.9rem;
+}
+
+h4 {
+    color: #e0e0ff;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    color: #b8b8ff;
+    line-height: 1.6;
+    margin-top: 0.5rem;
 }
 
 .info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    background: rgba(20, 20, 35, 0.6);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(159, 114, 255, 0.1);
 }
 
 .info-item {
     display: flex;
     align-items: center;
     gap: 1rem;
+    padding: 0.8rem;
+    background: rgba(30, 30, 50, 0.4);
+    border-radius: 6px;
 }
 
 .info-item i {
-    font-size: 1.5rem;
-    color: var(--accent-3);
-    background: var(--gradient-primary);
+    font-size: 1.2rem;
+    background: linear-gradient(135deg, #9f72ff 0%, #6d4aff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-h4 {
-    color: var(--text-primary);
-}
-
-p {
-    color: var(--text-secondary);
+.info-item a {
+    color: #e0e0ff;
+    text-decoration: none;
 }
 
 @media (max-width: 768px) {
     .period {
         text-align: left;
         margin-top: 0.5rem;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
     }
 }
 </style>
