@@ -91,7 +91,7 @@ const animate = (timestamp: number) => {
     lastFrameTime = timestamp
 
     // Changing the alpha value of this fillRect call will change the trail length. 0.1 is the original
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
     const centerX = ctx.canvas.width / 2

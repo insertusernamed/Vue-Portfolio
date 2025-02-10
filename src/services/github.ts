@@ -13,6 +13,9 @@ export interface GitHubProject {
     html_url: string
     languages_url: string
     topLanguages: Language[]
+    homepage: string | null
+    has_pages: boolean
+    preview_url?: string
 }
 
 interface CachedData {
@@ -51,6 +54,8 @@ export async function fetchGitHubProjects(): Promise<GitHubProject[]> {
                     description: string | null
                     html_url: string
                     languages_url: string
+                    homepage: string | null
+                    has_pages: boolean
                 }) => {
                     const languagesResponse = await axios.get(repo.languages_url)
                     const languagesData = languagesResponse.data
@@ -62,12 +67,19 @@ export async function fetchGitHubProjects(): Promise<GitHubProject[]> {
 
                     const topLanguages = Object.entries(languagesData)
                         .sort(([, a], [, b]) => Number(b) - Number(a))
-                        .slice(0, 3)
                         .map(([language, chars]) => ({
                             language,
                             percent: Math.round((Number(chars) / totalChars) * 100),
                             color: COLORS[language] || '#000',
                         }))
+
+                    // Determine preview URL
+                    let preview_url = null
+                    if (repo.homepage) {
+                        preview_url = repo.homepage
+                    } else if (repo.has_pages) {
+                        preview_url = `https://${repo.name}.github.io/${repo.name}`
+                    }
 
                     return {
                         name: repo.name,
@@ -75,6 +87,9 @@ export async function fetchGitHubProjects(): Promise<GitHubProject[]> {
                         html_url: repo.html_url,
                         languages_url: repo.languages_url,
                         topLanguages,
+                        homepage: repo.homepage,
+                        has_pages: repo.has_pages,
+                        preview_url
                     }
                 },
             ),
