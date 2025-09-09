@@ -36,7 +36,7 @@ export async function fetchGitHubProjects(): Promise<GitHubProject[]> {
                     }))
 
                 // Determine preview URL
-                let preview_url = null
+                let preview_url: string | null = null
                 if (repo.homepage) {
                     preview_url = repo.homepage
                 } else if (repo.has_pages) {

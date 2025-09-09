@@ -15,6 +15,46 @@
             <div v-else class="row">
                 <div class="col-md-6 col-lg-4 mb-4" v-for="project in projects" :key="project.name">
                     <div class="project-card" :style="getProjectStyle(project.topLanguages[0]?.color || '#666')">
+                        <!-- Project Screenshot -->
+                        <div class="project-screenshot" v-if="getProjectScreenshot(project.name)?.screenshot_url">
+                            <img :src="getProjectScreenshot(project.name)?.screenshot_url || ''"
+                                :alt="`Screenshot of ${project.name}`" class="screenshot-img fade-in"
+                                @error="onImageError" @load="onImageLoad" />
+                            <div class="screenshot-overlay">
+                                <a v-if="project.preview_url" :href="project.preview_url" target="_blank"
+                                    class="screenshot-link">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                        <polyline points="15,3 21,3 21,9"></polyline>
+                                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Placeholder for projects without screenshots -->
+                        <div class="project-placeholder"
+                            v-else-if="project.preview_url && !hasFailedScreenshot(project.name)">
+                            <div class="placeholder-content">
+                                <LoadingIcon icon-class="fa-solid fa-image" />
+                                <p>Screenshot loading...</p>
+                            </div>
+                        </div>
+
+                        <!-- Failed screenshot state -->
+                        <div class="project-placeholder failed" v-else-if="hasFailedScreenshot(project.name)">
+                            <div class="placeholder-content">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                </svg>
+                                <p>Screenshot unavailable</p>
+                            </div>
+                        </div>
+
                         <div class="project-content">
                             <div class="project-header">
                                 <h3>{{ project.name }}</h3>
@@ -54,16 +94,46 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useGitHubStore } from '../stores/githubStore'
+import { useScreenshotStore } from '../stores/screenshotStore'
+import LoadingIcon from './LoadingIcon.vue'
 
 const githubStore = useGitHubStore()
+const screenshotStore = useScreenshotStore()
 const { projects, loading, error } = storeToRefs(githubStore)
+const { screenshots, loading: screenshotLoading } = storeToRefs(screenshotStore)
 
 onMounted(async () => {
     await githubStore.fetchProjects()
+    if (projects.value.length > 0) {
+        await screenshotStore.fetchScreenshots(projects.value)
+    }
 })
+
+onUnmounted(() => {
+    screenshotStore.cleanupBlobUrls()
+})
+
+function getProjectScreenshot(projectName: string) {
+    return screenshotStore.getScreenshotByName(projectName)
+}
+
+function hasFailedScreenshot(projectName: string) {
+    const screenshot = screenshotStore.getScreenshotByName(projectName)
+    return screenshot && screenshot.status === 'failed'
+}
+
+function onImageError(event: Event) {
+    const img = event.target as HTMLImageElement
+    img.style.display = 'none'
+}
+
+function onImageLoad(event: Event) {
+    const img = event.target as HTMLImageElement
+    img.classList.add('loaded')
+}
 
 function getProjectStyle(color: string) {
     return {
@@ -287,5 +357,131 @@ function adjustColor(color: string, opacity: number): string {
 .btn-secondary:active {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     background: #e0e0e0;
+}
+
+/* Screenshot Styles */
+.project-screenshot {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px 16px 0 0;
+    height: 200px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.screenshot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease, opacity 0.4s ease;
+    opacity: 0;
+}
+
+.screenshot-img.fade-in {
+    opacity: 0;
+    animation: fadeInImage 0.6s ease-out forwards;
+}
+
+.screenshot-img.loaded {
+    opacity: 1;
+}
+
+@keyframes fadeInImage {
+    from {
+        opacity: 0;
+        transform: scale(1.05);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.project-card:hover .screenshot-img {
+    transform: scale(1.05);
+}
+
+.screenshot-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.project-screenshot:hover .screenshot-overlay {
+    opacity: 1;
+}
+
+.screenshot-link {
+    color: white;
+    padding: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.screenshot-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+    color: white;
+}
+
+.project-placeholder {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 16px 16px 0 0;
+    transition: all 0.3s ease;
+}
+
+.project-placeholder.failed {
+    background: rgba(220, 53, 69, 0.1);
+    border: 1px dashed rgba(220, 53, 69, 0.3);
+}
+
+.placeholder-content {
+    text-align: center;
+    color: var(--text-code);
+    opacity: 0.6;
+    animation: fadeInPlaceholder 0.4s ease-out;
+}
+
+.project-placeholder.failed .placeholder-content {
+    color: rgba(220, 53, 69, 0.8);
+}
+
+@keyframes fadeInPlaceholder {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 0.6;
+        transform: translateY(0);
+    }
+}
+
+.placeholder-content svg {
+    margin-bottom: 0.5rem;
+    opacity: 0.5;
+}
+
+.placeholder-content p {
+    margin: 0;
+    font-size: 0.85rem;
 }
 </style>
