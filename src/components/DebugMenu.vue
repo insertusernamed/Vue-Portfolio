@@ -6,8 +6,7 @@
         <div class="debug-content">
             <div class="debug-row">
                 <label>Particle Count:</label>
-                <input type="number" v-model="particleInput" @change="updateParticleCount" min="1000"
-                    :max="maxParticles" step="100">
+                <input type="number" v-model="particleInput" @change="updateParticleCount" min="1000" step="100">
             </div>
             <div class="debug-row">
                 <label>FPS:</label>
@@ -18,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps<{
     particleCount: number
@@ -32,8 +31,6 @@ const isVisible = ref(false)
 const fps = ref(0)
 const particleInput = ref(props.particleCount)
 
-const maxParticles = computed(() => window.innerWidth < 768 ? 5000 : 20000)
-
 let frameCount = 0
 let lastTime = performance.now()
 let animationFrameId: number
@@ -45,7 +42,7 @@ const toggleVisibility = (e: KeyboardEvent) => {
 }
 
 const updateParticleCount = () => {
-    const count = Math.max(1000, Math.min(maxParticles.value, parseInt(particleInput.value.toString())))
+    const count = parseInt(particleInput.value.toString())
     emit('update:particleCount', count)
 }
 
