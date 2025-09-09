@@ -131,13 +131,8 @@ export const useScreenshotStore = defineStore('screenshot', {
             this.lastFetched = null
         },
 
-        // Clean up blob URLs to prevent memory leaks
         cleanupBlobUrls() {
-            this.screenshots.forEach(screenshot => {
-                if (screenshot.screenshot_url && screenshot.screenshot_url.startsWith('blob:')) {
-                    URL.revokeObjectURL(screenshot.screenshot_url)
-                }
-            })
+            console.log('Screenshot cleanup completed (base64 data URLs)')
         }
     }
 })

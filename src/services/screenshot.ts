@@ -18,14 +18,19 @@ export async function fetchProjectScreenshots(
             const response = await axios.get(
                 `${SCREENSHOT_API_BASE}/screenshot?url=${encodeURIComponent(project.preview_url!)}&networkidle=true`,
                 {
-                    timeout: 8000,
+                    timeout: 16000,
                     responseType: 'blob'
                 }
             )
 
             // Convert blob to base64 data URL for display
             const screenshotBlob = response.data
-            const screenshotUrl = URL.createObjectURL(screenshotBlob)
+            const reader = new FileReader()
+
+            const screenshotUrl = await new Promise<string>((resolve) => {
+                reader.onloadend = () => resolve(reader.result as string)
+                reader.readAsDataURL(screenshotBlob)
+            })
 
             const screenshotProject = {
                 name: project.name,
@@ -79,7 +84,13 @@ export async function fetchProjectScreenshots(
         )
 
         const screenshotBlob = response.data
-        return URL.createObjectURL(screenshotBlob)
+        const reader = new FileReader()
+
+        return new Promise<string>((resolve, reject) => {
+            reader.onloadend = () => resolve(reader.result as string)
+            reader.onerror = reject
+            reader.readAsDataURL(screenshotBlob)
+        })
     } catch (error) {
         console.error('Failed to fetch screenshot:', error)
         return null
