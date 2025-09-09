@@ -55,10 +55,11 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useGitHubStore } from '../stores/githubStore'
 
 const githubStore = useGitHubStore()
-const { projects, loading, error } = githubStore
+const { projects, loading, error } = storeToRefs(githubStore)
 
 onMounted(async () => {
     await githubStore.fetchProjects()

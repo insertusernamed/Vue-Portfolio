@@ -35,19 +35,20 @@ export const useGitHubStore = defineStore('github', {
             if (!forceRefresh) {
                 const cached = localStorage.getItem(CACHE_KEY)
                 if (cached) {
-                    const cachedData: CachedData = JSON.parse(cached)
-                    const now = Date.now()
+                    try {
+                        const cachedData: CachedData = JSON.parse(cached)
+                        const now = Date.now()
 
-                    if (now - cachedData.timestamp < CACHE_DURATION) {
-                        console.log('Returning cached data from localStorage')
-                        this.projects = cachedData.projects
-                        this.lastFetched = cachedData.timestamp
-                        return this.projects
+                        if (now - cachedData.timestamp < CACHE_DURATION) {
+                            this.projects = cachedData.projects
+                            this.lastFetched = cachedData.timestamp
+                            return this.projects
+                        }
+                    } catch (e) {
+                        console.error('Error parsing cached data:', e)
                     }
                 }
-            }
-
-            // Fetch fresh data
+            }            // Fetch fresh data
             this.loading = true
             this.error = null
 
@@ -66,9 +67,14 @@ export const useGitHubStore = defineStore('github', {
                 localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData))
 
                 return this.projects
-            } catch (err) {
-                this.error = 'Failed to load projects'
-                console.error(err)
+            } catch (err: any) {
+                console.error('GitHub API Error:', err)
+
+                if (err.response?.status === 403) {
+                    this.error = 'GitHub API rate limit exceeded. Please try again later.'
+                } else {
+                    this.error = 'Failed to load projects'
+                }
 
                 // If API call fails, return cached data if available
                 const cached = localStorage.getItem(CACHE_KEY)
