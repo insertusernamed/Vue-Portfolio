@@ -12,11 +12,12 @@
                 {{ error }}
             </div>
 
-            <div v-else class="row">
-                <div class="col-md-6 col-lg-4 mb-4" v-for="project in projects" :key="project.name">
+            <div v-else class="masonry-grid">
+                <div class="masonry-item" v-for="project in projects" :key="project.name">
                     <div class="project-card" :style="getProjectStyle(project.topLanguages[0]?.color || '#666')">
                         <!-- Project Screenshot -->
-                        <div class="project-screenshot" v-if="getProjectScreenshot(project.name)?.screenshot_url">
+                        <div class="project-screenshot"
+                            v-if="getProjectScreenshot(project.name)?.screenshot_url && !hasFailedScreenshot(project.name)">
                             <img :src="getProjectScreenshot(project.name)?.screenshot_url || ''"
                                 :alt="`Screenshot of ${project.name}`" class="screenshot-img fade-in"
                                 @error="onImageError" @load="onImageLoad" />
@@ -30,28 +31,6 @@
                                         <line x1="10" y1="14" x2="21" y2="3"></line>
                                     </svg>
                                 </a>
-                            </div>
-                        </div>
-
-                        <!-- Placeholder for projects without screenshots -->
-                        <div class="project-placeholder"
-                            v-else-if="project.preview_url && !hasFailedScreenshot(project.name)">
-                            <div class="placeholder-content">
-                                <LoadingIcon icon-class="fa-solid fa-image" />
-                                <p>Screenshot loading...</p>
-                            </div>
-                        </div>
-
-                        <!-- Failed screenshot state -->
-                        <div class="project-placeholder failed" v-else-if="hasFailedScreenshot(project.name)">
-                            <div class="placeholder-content">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.5">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="9" y1="9" x2="15" y2="15"></line>
-                                    <line x1="15" y1="9" x2="9" y2="15"></line>
-                                </svg>
-                                <p>Screenshot unavailable</p>
                             </div>
                         </div>
 
@@ -98,7 +77,6 @@ import { onMounted, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useGitHubStore } from '../stores/githubStore'
 import { useScreenshotStore } from '../stores/screenshotStore'
-import LoadingIcon from './LoadingIcon.vue'
 
 const githubStore = useGitHubStore()
 const screenshotStore = useScreenshotStore()
@@ -168,6 +146,32 @@ function adjustColor(color: string, opacity: number): string {
 
 .section-title {
     color: var(--text-light);
+}
+
+/* Masonry Grid Layout */
+.masonry-grid {
+    column-count: 3;
+    column-gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+@media (max-width: 992px) {
+    .masonry-grid {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 576px) {
+    .masonry-grid {
+        column-count: 1;
+    }
+}
+
+.masonry-item {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    break-inside: avoid;
 }
 
 .project-card {
@@ -435,53 +439,5 @@ function adjustColor(color: string, opacity: number): string {
     background: rgba(255, 255, 255, 0.2);
     transform: scale(1.1);
     color: white;
-}
-
-.project-placeholder {
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 16px 16px 0 0;
-    transition: all 0.3s ease;
-}
-
-.project-placeholder.failed {
-    background: rgba(220, 53, 69, 0.1);
-    border: 1px dashed rgba(220, 53, 69, 0.3);
-}
-
-.placeholder-content {
-    text-align: center;
-    color: var(--text-code);
-    opacity: 0.6;
-    animation: fadeInPlaceholder 0.4s ease-out;
-}
-
-.project-placeholder.failed .placeholder-content {
-    color: rgba(220, 53, 69, 0.8);
-}
-
-@keyframes fadeInPlaceholder {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 0.6;
-        transform: translateY(0);
-    }
-}
-
-.placeholder-content svg {
-    margin-bottom: 0.5rem;
-    opacity: 0.5;
-}
-
-.placeholder-content p {
-    margin: 0;
-    font-size: 0.85rem;
 }
 </style>
