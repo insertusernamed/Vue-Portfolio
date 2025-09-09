@@ -1,3 +1,9 @@
+<template>
+    <div class="fps-counter">
+        {{ fps }} FPS
+    </div>
+</template>
+
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
@@ -29,11 +35,6 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<template>
-    <div class="fps-counter">
-        {{ fps }} FPS
-    </div>
-</template>
 
 <style scoped>
 .fps-counter {

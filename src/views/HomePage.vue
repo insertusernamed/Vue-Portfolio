@@ -1,38 +1,3 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-import ProjectsSection from '../components/ProjectsSection.vue'
-import CVSection from '../components/CVSection.vue'
-import BlackHoleCanvas from '../components/BlackHoleCanvas.vue'
-import DebugMenu from '../components/DebugMenu.vue'
-
-const getDefaultParticleCount = () => {
-    return window.innerWidth < 768 ? 2000 : 4000
-}
-
-const particleCount = ref(getDefaultParticleCount())
-
-const skills = ref([
-    {
-        icon: 'icon ion-code',
-        title: 'Full-Stack Development',
-        description: 'Experienced in modern web development using Vue.js, React, and Node.js. Building robust applications with TypeScript, Spring Boot, and cloud-native architectures. Proficient in both SQL and NoSQL databases.',
-        core: 'Vue.js · React · Node.js · TypeScript'
-    },
-    {
-        icon: 'icon ion-settings',
-        title: 'System Architecture',
-        description: 'Designing scalable distributed systems with a focus on microservices architecture and API design. Experienced in implementing domain-driven design principles and event-driven architectures.',
-        core: 'Microservices · API Design · System Architecture'
-    },
-    {
-        icon: 'icon ion-cloud',
-        title: 'DevOps & Cloud',
-        description: 'Orchestrating cloud infrastructure on AWS and Azure. Implementing containerized solutions with Docker and Kubernetes, along with automated CI/CD pipelines using modern DevOps practices.',
-        core: 'AWS · Docker · Kubernetes · CI/CD'
-    }
-])
-</script>
-
 <template>
     <div class="portfolio-page" role="main">
         <BlackHoleCanvas :particle-count="particleCount" />
@@ -84,6 +49,42 @@ const skills = ref([
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import ProjectsSection from '../components/ProjectsSection.vue'
+import CVSection from '../components/CVSection.vue'
+import BlackHoleCanvas from '../components/BlackHoleCanvas.vue'
+import DebugMenu from '../components/DebugMenu.vue'
+
+const getDefaultParticleCount = () => {
+    return window.innerWidth < 768 ? 2000 : 4000
+}
+
+const particleCount = ref(getDefaultParticleCount())
+
+const skills = ref([
+    {
+        icon: 'icon ion-code',
+        title: 'Full-Stack Development',
+        description: 'Experienced in modern web development using Vue.js, React, and Node.js. Building robust applications with TypeScript, Spring Boot, and cloud-native architectures. Proficient in both SQL and NoSQL databases.',
+        core: 'Vue.js · React · Node.js · TypeScript'
+    },
+    {
+        icon: 'icon ion-settings',
+        title: 'System Architecture',
+        description: 'Designing scalable distributed systems with a focus on microservices architecture and API design. Experienced in implementing domain-driven design principles and event-driven architectures.',
+        core: 'Microservices · API Design · System Architecture'
+    },
+    {
+        icon: 'icon ion-cloud',
+        title: 'DevOps & Cloud',
+        description: 'Orchestrating cloud infrastructure on AWS and Azure. Implementing containerized solutions with Docker and Kubernetes, along with automated CI/CD pipelines using modern DevOps practices.',
+        core: 'AWS · Docker · Kubernetes · CI/CD'
+    }
+])
+</script>
+
 
 <style scoped>
 .black-hole-canvas {

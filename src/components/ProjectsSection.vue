@@ -1,46 +1,3 @@
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { fetchGitHubProjects } from '../services/github'
-import type { GitHubProject } from '../services/github'
-
-const projects = ref<GitHubProject[]>([])
-const loading = ref(true)
-const error = ref<string | null>(null)
-
-onMounted(async () => {
-    try {
-        projects.value = await fetchGitHubProjects()
-    } catch (e) {
-        error.value = 'Failed to load projects'
-        console.error(e)
-    } finally {
-        loading.value = false
-    }
-})
-
-function getProjectStyle(color: string) {
-    return {
-        background: `linear-gradient(145deg, var(--card-bg-dark) 0%, ${adjustColor(color, 0.05)} 100%)`,
-        borderLeft: `3px solid ${adjustColor(color, 0.7)}`
-    }
-}
-
-function adjustColor(color: string, opacity: number): string {
-    // Handle undefined or invalid colors
-    if (!color || color === '#000') return '#666666';
-
-    // Remove # if present
-    const hex = color.replace('#', '');
-
-    // Convert hex to RGB
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-
-    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-}
-</script>
-
 <template>
     <section id="projects" class="projects-section">
         <div class="container-fluid px-4">
@@ -95,6 +52,41 @@ function adjustColor(color: string, opacity: number): string {
         </div>
     </section>
 </template>
+
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import { useGitHubStore } from '../stores/githubStore'
+
+const githubStore = useGitHubStore()
+const { projects, loading, error } = githubStore
+
+onMounted(async () => {
+    await githubStore.fetchProjects()
+})
+
+function getProjectStyle(color: string) {
+    return {
+        background: `linear-gradient(145deg, var(--card-bg-dark) 0%, ${adjustColor(color, 0.05)} 100%)`,
+        borderLeft: `3px solid ${adjustColor(color, 0.7)}`
+    }
+}
+
+function adjustColor(color: string, opacity: number): string {
+    // Handle undefined or invalid colors
+    if (!color || color === '#000') return '#666666';
+
+    // Remove # if present
+    const hex = color.replace('#', '');
+
+    // Convert hex to RGB
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+</script>
+
 
 <style scoped>
 .projects-section {

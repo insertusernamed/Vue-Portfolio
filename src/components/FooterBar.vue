@@ -1,7 +1,3 @@
-<script setup lang="ts">
-import LoadingIcon from './LoadingIcon.vue'
-</script>
-
 <template>
     <footer class="page-footer py-4">
         <div class="container">
@@ -37,6 +33,10 @@ import LoadingIcon from './LoadingIcon.vue'
         </div>
     </footer>
 </template>
+
+<script setup lang="ts">
+import LoadingIcon from './LoadingIcon.vue'
+</script>
 
 <style scoped>
 .page-footer {

@@ -1,3 +1,22 @@
+<template>
+    <div v-show="isVisible" class="debug-menu">
+        <div class="debug-header">
+            Debug Menu (Press ` to toggle)
+        </div>
+        <div class="debug-content">
+            <div class="debug-row">
+                <label>Particle Count:</label>
+                <input type="number" v-model="particleInput" @change="updateParticleCount" min="1000"
+                    :max="maxParticles" step="100">
+            </div>
+            <div class="debug-row">
+                <label>FPS:</label>
+                <span class="fps-value">{{ fps }}</span>
+            </div>
+        </div>
+    </div>
+</template>
+
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
@@ -55,24 +74,6 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<template>
-    <div v-show="isVisible" class="debug-menu">
-        <div class="debug-header">
-            Debug Menu (Press ` to toggle)
-        </div>
-        <div class="debug-content">
-            <div class="debug-row">
-                <label>Particle Count:</label>
-                <input type="number" v-model="particleInput" @change="updateParticleCount" min="1000"
-                    :max="maxParticles" step="100">
-            </div>
-            <div class="debug-row">
-                <label>FPS:</label>
-                <span class="fps-value">{{ fps }}</span>
-            </div>
-        </div>
-    </div>
-</template>
 
 <style scoped>
 .debug-menu {

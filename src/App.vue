@@ -1,9 +1,3 @@
-<script setup lang="ts">
-import { RouterView } from 'vue-router'
-import NavBar from './components/NavBar.vue'
-import FooterBar from './components/FooterBar.vue'
-</script>
-
 <template>
 
     <head>
@@ -17,6 +11,13 @@ import FooterBar from './components/FooterBar.vue'
         <FooterBar />
     </div>
 </template>
+
+<script setup lang="ts">
+import { RouterView } from 'vue-router'
+import NavBar from './components/NavBar.vue'
+import FooterBar from './components/FooterBar.vue'
+</script>
+
 
 <style>
 @import './assets/variables.css';
