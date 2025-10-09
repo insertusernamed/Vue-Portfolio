@@ -12,57 +12,120 @@
                 {{ error }}
             </div>
 
-            <div v-else class="masonry-grid">
-                <div class="masonry-item" v-for="project in projects" :key="project.name">
-                    <div class="project-card" :style="getProjectStyle(project.topLanguages[0]?.color || '#666')">
-                        <!-- Project Screenshot -->
-                        <div class="project-screenshot"
-                            v-if="getProjectScreenshot(project.name)?.screenshot_url && !hasFailedScreenshot(project.name)">
-                            <img :src="getProjectScreenshot(project.name)?.screenshot_url || ''"
-                                :alt="`Screenshot of ${project.name}`" class="screenshot-img fade-in"
-                                @error="onImageError" @load="onImageLoad" />
-                            <div class="screenshot-overlay">
-                                <a v-if="project.preview_url" :href="project.preview_url" target="_blank"
-                                    class="screenshot-link">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                        <polyline points="15,3 21,3 21,9"></polyline>
-                                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                                    </svg>
-                                </a>
+            <div v-else>
+                <!-- Pinned Projects Section -->
+                <div v-if="pinnedProjects.length > 0" class="projects-group">
+                    <h3 class="group-title">Featured Projects</h3>
+                    <div class="masonry-grid">
+                        <div class="masonry-item" v-for="project in pinnedProjects" :key="project.name">
+                            <div class="project-card"
+                                :style="getProjectStyle(project.languages.nodes[0]?.color || '#666')">
+                                <!-- Project Screenshot -->
+                                <div class="project-screenshot"
+                                    v-if="getProjectScreenshot(project.name)?.screenshot_url && !hasFailedScreenshot(project.name)">
+                                    <img :src="getProjectScreenshot(project.name)?.screenshot_url || ''"
+                                        :alt="`Screenshot of ${project.name}`" class="screenshot-img fade-in"
+                                        @error="onImageError" @load="onImageLoad" />
+                                    <div class="screenshot-overlay">
+                                        <a v-if="project.preview_url" :href="project.preview_url" target="_blank"
+                                            class="screenshot-link">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6">
+                                                </path>
+                                                <polyline points="15,3 21,3 21,9"></polyline>
+                                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="project-content">
+                                    <div class="project-header">
+                                        <h3>{{ project.name }}</h3>
+                                        <div class="project-decoration"
+                                            :style="{ background: adjustColor(project.languages.nodes[0]?.color || '#666', 0.15) }">
+                                        </div>
+                                    </div>
+                                    <p>{{ project.description || 'No description available.' }}</p>
+
+                                    <div class="languages-tags" v-if="project.languages.nodes.length > 0">
+                                        <span v-for="lang in getSortedLanguages(project.languages.nodes)"
+                                            :key="lang.name" class="language-tag" :style="{
+                                                backgroundColor: adjustColor(lang.color, 0.15),
+                                                borderColor: lang.color,
+                                                color: lang.color
+                                            }">
+                                            {{ lang.name }}
+                                        </span>
+                                    </div>
+
+                                    <div class="button-group mt-3">
+                                        <a :href="project.url" target="_blank" class="btn btn-primary">View on
+                                            GitHub</a>
+                                        <a v-if="project.preview_url" :href="project.preview_url" target="_blank"
+                                            class="btn btn-secondary">Visit Demo</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="project-content">
-                            <div class="project-header">
-                                <h3>{{ project.name }}</h3>
-                                <div class="project-decoration"
-                                    :style="{ background: adjustColor(project.topLanguages[0]?.color || '#666', 0.15) }">
+                <!-- Other Projects Section -->
+                <div v-if="otherProjects.length > 0" class="projects-group">
+                    <h3 class="group-title">Other Projects</h3>
+                    <div class="masonry-grid">
+                        <div class="masonry-item" v-for="project in otherProjects" :key="project.name">
+                            <div class="project-card"
+                                :style="getProjectStyle(project.languages.nodes[0]?.color || '#666')">
+                                <!-- Project Screenshot -->
+                                <div class="project-screenshot"
+                                    v-if="getProjectScreenshot(project.name)?.screenshot_url && !hasFailedScreenshot(project.name)">
+                                    <img :src="getProjectScreenshot(project.name)?.screenshot_url || ''"
+                                        :alt="`Screenshot of ${project.name}`" class="screenshot-img fade-in"
+                                        @error="onImageError" @load="onImageLoad" />
+                                    <div class="screenshot-overlay">
+                                        <a v-if="project.preview_url" :href="project.preview_url" target="_blank"
+                                            class="screenshot-link">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6">
+                                                </path>
+                                                <polyline points="15,3 21,3 21,9"></polyline>
+                                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                                            </svg>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <p>{{ project.description || 'No description available.' }}</p>
 
-                            <div class="languages-bar">
-                                <div v-for="lang in project.topLanguages" :key="lang.language" class="language-progress"
-                                    :style="{
-                                        width: lang.percent + '%',
-                                        backgroundColor: lang.color
-                                    }">
+                                <div class="project-content">
+                                    <div class="project-header">
+                                        <h3>{{ project.name }}</h3>
+                                        <div class="project-decoration"
+                                            :style="{ background: adjustColor(project.languages.nodes[0]?.color || '#666', 0.15) }">
+                                        </div>
+                                    </div>
+                                    <p>{{ project.description || 'No description available.' }}</p>
+
+                                    <div class="languages-tags" v-if="project.languages.nodes.length > 0">
+                                        <span v-for="lang in getSortedLanguages(project.languages.nodes)"
+                                            :key="lang.name" class="language-tag" :style="{
+                                                backgroundColor: adjustColor(lang.color, 0.15),
+                                                borderColor: lang.color,
+                                                color: lang.color
+                                            }">
+                                            {{ lang.name }}
+                                        </span>
+                                    </div>
+
+                                    <div class="button-group mt-3">
+                                        <a :href="project.url" target="_blank" class="btn btn-primary">View on
+                                            GitHub</a>
+                                        <a v-if="project.preview_url" :href="project.preview_url" target="_blank"
+                                            class="btn btn-secondary">Visit Demo</a>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="languages-legend">
-                                <div v-for="lang in project.topLanguages" :key="lang.language" class="language-item">
-                                    <span class="language-dot" :style="{ backgroundColor: lang.color }"></span>
-                                    <span class="language-name">{{ lang.language }}</span>
-                                </div>
-                            </div>
-
-                            <div class="button-group mt-3">
-                                <a :href="project.html_url" target="_blank" class="btn btn-primary">View on GitHub</a>
-                                <a v-if="project.preview_url" :href="project.preview_url" target="_blank"
-                                    class="btn btn-secondary">Visit Demo</a>
                             </div>
                         </div>
                     </div>
@@ -73,26 +136,32 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useGitHubStore } from '../stores/githubStore'
 import { useScreenshotStore } from '../stores/screenshotStore'
 
 const githubStore = useGitHubStore()
 const screenshotStore = useScreenshotStore()
-const { projects, loading, error } = storeToRefs(githubStore)
+const { pinnedProjects, otherProjects, loading, error } = storeToRefs(githubStore)
 const { screenshots, loading: screenshotLoading } = storeToRefs(screenshotStore)
+
+const allProjects = computed(() => githubStore.allProjects)
 
 onMounted(async () => {
     await githubStore.fetchProjects()
-    if (projects.value.length > 0) {
-        await screenshotStore.fetchScreenshots(projects.value)
+    if (allProjects.value.length > 0) {
+        await screenshotStore.fetchScreenshots(allProjects.value)
     }
 })
 
 onUnmounted(() => {
     screenshotStore.cleanupBlobUrls()
 })
+
+function getSortedLanguages(nodes: { name: string; color: string }[]) {
+    return [...nodes].sort((a, b) => a.name.localeCompare(b.name))
+}
 
 function getProjectScreenshot(projectName: string) {
     return screenshotStore.getScreenshotByName(projectName)
@@ -254,64 +323,26 @@ function adjustColor(color: string, opacity: number): string {
     }
 }
 
-.languages-bar {
-    height: 6px;
-    display: flex;
-    border-radius: 6px;
-    overflow: hidden;
-    margin: 1.5rem 0;
-    background: rgba(0, 0, 0, 0.2);
-}
-
-.language-progress {
-    height: 100%;
-    transition: all 0.2s ease;
-}
-
-.project-card:hover .language-progress {
-    transform: scaleY(1.2);
-}
-
-.languages-legend {
+.languages-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    padding: 0.5rem;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-.language-item {
-    display: flex;
-    align-items: center;
     gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
-.language-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-}
-
-.language-name {
-    color: var(--text-code);
-    font-size: 0.85rem;
+.language-tag {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
     font-weight: 500;
+    border: 1px solid;
+    transition: all 0.2s ease;
+    color: white !important;
 }
 
-.btn-primary {
-    background: var(--gradient-primary);
-    border: none;
-    box-shadow: 0 4px 15px var(--card-shadow);
-}
-
-.btn-primary:hover {
-    box-shadow: 0 6px 20px var(--card-shadow);
-}
-
-.btn-primary:active {
-    box-shadow: 0 2px 10px var(--card-shadow);
+.language-tag:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.2);
 }
 
 .error-message {
@@ -340,6 +371,20 @@ function adjustColor(color: string, opacity: number): string {
 
 .btn:active {
     top: 2px;
+}
+
+.btn-primary {
+    background: var(--gradient-primary);
+    border: none;
+    box-shadow: 0 4px 15px var(--card-shadow);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 6px 20px var(--card-shadow);
+}
+
+.btn-primary:active {
+    box-shadow: 0 2px 10px var(--card-shadow);
 }
 
 .btn-secondary {
@@ -439,5 +484,17 @@ function adjustColor(color: string, opacity: number): string {
     background: rgba(255, 255, 255, 0.2);
     transform: scale(1.1);
     color: white;
+}
+
+.projects-group {
+    margin-bottom: 3rem;
+}
+
+.group-title {
+    color: var(--text-light);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-align: center;
 }
 </style>

@@ -1,11 +1,14 @@
 export interface GitHubProject {
     name: string
     description: string | null
-    html_url: string
-    languages_url: string
-    topLanguages: Language[]
-    homepage: string | null
-    has_pages: boolean
+    url: string
+    homepageUrl: string | null
+    languages: {
+        nodes: {
+            name: string
+            color: string
+        }[]
+    }
     preview_url?: string
 }
 
@@ -15,7 +18,15 @@ export interface Language {
     color: string
 }
 
+export interface GraphQLResponse {
+    data: {
+        pinnedRepos: GitHubProject[]
+        otherRepos: GitHubProject[]
+    }
+}
+
 export interface CachedData {
-    projects: GitHubProject[]
+    pinnedProjects: GitHubProject[]
+    otherProjects: GitHubProject[]
     timestamp: number
 }

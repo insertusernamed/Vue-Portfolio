@@ -7,7 +7,8 @@ const CACHE_DURATION = 30 * 60 * 1000 // 30 minutes
 
 export const useGitHubStore = defineStore('github', {
     state: () => ({
-        projects: [] as GitHubProject[],
+        pinnedProjects: [] as GitHubProject[],
+        otherProjects: [] as GitHubProject[],
         loading: false,
         error: null as string | null,
         lastFetched: null as number | null
@@ -15,12 +16,16 @@ export const useGitHubStore = defineStore('github', {
 
     getters: {
         hasProjects(): boolean {
-            return this.projects.length > 0
+            return this.pinnedProjects.length > 0 || this.otherProjects.length > 0
         },
 
         isDataStale(): boolean {
             if (!this.lastFetched) return true
             return Date.now() - this.lastFetched > CACHE_DURATION
+        },
+
+        allProjects(): GitHubProject[] {
+            return [...this.pinnedProjects, ...this.otherProjects]
         }
     },
 
@@ -28,7 +33,7 @@ export const useGitHubStore = defineStore('github', {
         async fetchProjects(forceRefresh = false) {
             // Return cached data if available and not stale
             if (!forceRefresh && this.hasProjects && !this.isDataStale) {
-                return this.projects
+                return { pinned: this.pinnedProjects, other: this.otherProjects }
             }
 
             // Check localStorage cache
@@ -40,9 +45,10 @@ export const useGitHubStore = defineStore('github', {
                         const now = Date.now()
 
                         if (now - cachedData.timestamp < CACHE_DURATION) {
-                            this.projects = cachedData.projects
+                            this.pinnedProjects = cachedData.pinnedProjects
+                            this.otherProjects = cachedData.otherProjects
                             this.lastFetched = cachedData.timestamp
-                            return this.projects
+                            return { pinned: this.pinnedProjects, other: this.otherProjects }
                         }
                     } catch (e) {
                         console.error('Error parsing cached data:', e)
@@ -53,36 +59,35 @@ export const useGitHubStore = defineStore('github', {
             this.error = null
 
             try {
-                const fetchedProjects = await fetchGitHubProjects()
+                const { pinned, other } = await fetchGitHubProjects()
 
                 // Update store state
-                this.projects = fetchedProjects
+                this.pinnedProjects = pinned
+                this.otherProjects = other
                 this.lastFetched = Date.now()
 
                 // Cache the fresh data
                 const cacheData: CachedData = {
-                    projects: fetchedProjects,
+                    pinnedProjects: pinned,
+                    otherProjects: other,
                     timestamp: this.lastFetched,
                 }
                 localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData))
 
-                return this.projects
+                return { pinned: this.pinnedProjects, other: this.otherProjects }
             } catch (err: any) {
-                console.error('GitHub API Error:', err)
+                console.error('GitHub GraphQL API Error:', err)
 
-                if (err.response?.status === 403) {
-                    this.error = 'GitHub API rate limit exceeded. Please try again later.'
-                } else {
-                    this.error = 'Failed to load projects'
-                }
+                this.error = 'Failed to load projects'
 
                 // If API call fails, return cached data if available
                 const cached = localStorage.getItem(CACHE_KEY)
                 if (cached) {
                     const cachedData: CachedData = JSON.parse(cached)
-                    this.projects = cachedData.projects
+                    this.pinnedProjects = cachedData.pinnedProjects
+                    this.otherProjects = cachedData.otherProjects
                     this.lastFetched = cachedData.timestamp
-                    return this.projects
+                    return { pinned: this.pinnedProjects, other: this.otherProjects }
                 }
 
                 throw err
@@ -93,7 +98,8 @@ export const useGitHubStore = defineStore('github', {
 
         clearCache() {
             localStorage.removeItem(CACHE_KEY)
-            this.projects = []
+            this.pinnedProjects = []
+            this.otherProjects = []
             this.lastFetched = null
         }
     }
