@@ -14,10 +14,10 @@
 
             <div v-else>
                 <!-- Pinned Projects Section -->
-                <div v-if="pinnedProjects.length > 0" class="projects-group">
+                <div v-if="filteredPinned.length > 0" class="projects-group">
                     <h3 class="group-title">Featured Projects</h3>
                     <div class="masonry-grid">
-                        <div class="masonry-item" v-for="project in pinnedProjects" :key="project.name">
+                        <div class="masonry-item" v-for="project in filteredPinned" :key="project.name">
                             <div class="project-card"
                                 :style="getProjectStyle(project.languages.nodes[0]?.color || '#666')">
                                 <!-- Project Screenshot -->
@@ -73,10 +73,10 @@
                 </div>
 
                 <!-- Other Projects Section -->
-                <div v-if="otherProjects.length > 0" class="projects-group">
+                <div v-if="filteredOther.length > 0" class="projects-group">
                     <h3 class="group-title">Other Projects</h3>
                     <div class="masonry-grid">
-                        <div class="masonry-item" v-for="project in otherProjects" :key="project.name">
+                        <div class="masonry-item" v-for="project in filteredOther" :key="project.name">
                             <div class="project-card"
                                 :style="getProjectStyle(project.languages.nodes[0]?.color || '#666')">
                                 <!-- Project Screenshot -->
@@ -147,6 +147,10 @@ const { pinnedProjects, otherProjects, loading, error } = storeToRefs(githubStor
 const { screenshots, loading: screenshotLoading } = storeToRefs(screenshotStore)
 
 const allProjects = computed(() => githubStore.allProjects)
+
+// for some reason the graphql query also returns a repo that i dont own that i may have contributed to back in college and i dont really want to display it
+const filteredPinned = computed(() => pinnedProjects.value.filter(p => !p.url.includes('gracegrace030')))
+const filteredOther = computed(() => otherProjects.value.filter(p => !p.url.includes('gracegrace030')))
 
 onMounted(async () => {
     await githubStore.fetchProjects()
@@ -219,25 +223,26 @@ function adjustColor(color: string, opacity: number): string {
 
 /* Masonry Grid Layout */
 .masonry-grid {
-    column-count: 3;
-    column-gap: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
     margin-top: 2rem;
 }
 
 @media (max-width: 992px) {
     .masonry-grid {
-        column-count: 2;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 576px) {
     .masonry-grid {
-        column-count: 1;
+        grid-template-columns: 1fr;
     }
 }
 
 .masonry-item {
-    display: inline-block;
+    display: block;
     width: 100%;
     margin-bottom: 1.5rem;
     break-inside: avoid;
