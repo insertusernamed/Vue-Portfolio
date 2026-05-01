@@ -16,12 +16,9 @@
                         </div>
                     </div>
                     <p>
-                        Developed automation tests using SpecFlow to enhance testing efficiency and quality assurance
-                        processes.
-                        Collaborated with development teams to identify, report, and troubleshoot software defects.
-                        Performed maintenance on existing codebase to improve code quality and resolve issues.
-                        Automated critical test scenarios, significantly reducing manual testing efforts.
-                        Actively contributed to testing deliverables, ensuring timely release of high-quality software.
+                        Built and maintained automated test coverage with SpecFlow and collaborated with developers on
+                        defect triage and release readiness. Focused on reducing manual regression effort and improving
+                        reliability in day-to-day QA workflows.
                     </p>
                 </div>
                 <div class="experience-item">
@@ -34,9 +31,11 @@
                             <span class="period">10/2021 - 02/2023</span>
                         </div>
                     </div>
-                    <p>Architected and developed scalable web applications using Vue.js and Python.
-                        Implemented automated workflows that increased team productivity by 45% and reduced manual
-                        processing time by 70%.</p>
+                    <p>
+                        Developed internal and client-facing features using Vue.js and Python, and automated repetitive
+                        team workflows. The automation work reduced manual processing time and improved turnaround for
+                        routine operations.
+                    </p>
                 </div>
             </div>
 
@@ -52,7 +51,7 @@
                             <span class="period">05/2024 - Present</span>
                         </div>
                     </div>
-                    <p>Currently pursuing a Computer Science Bachelors Degree at Lakehead University.</p>
+                    <p>Currently pursuing a Bachelor of Computer Science with a focus on software engineering.</p>
                 </div>
                 <div class="education-item">
                     <div class="row">
@@ -64,7 +63,7 @@
                             <span class="period">09/2022 - 04/2024</span>
                         </div>
                     </div>
-                    <p>Completed Computer Programming Co-op Diploma at Georgian College.</p>
+                    <p>Completed a Computer Programming Co-op diploma with hands-on experience in full-stack project work.</p>
                 </div>
             </div>
 
@@ -96,10 +95,10 @@
 
 <style scoped>
 .cv-section {
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(10px);
+    background: linear-gradient(to bottom, rgba(5, 8, 16, 0.42), rgba(4, 6, 12, 0.62));
+    backdrop-filter: blur(4px);
     padding: 3rem 0;
-    border-top: 1px solid rgba(159, 114, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .section-title {
@@ -122,11 +121,11 @@
 
 .experience-item,
 .education-item {
-    background: rgba(20, 20, 35, 0.6);
+    background: rgba(12, 16, 30, 0.9);
     padding: 1.5rem;
     border-radius: 8px;
     margin-bottom: 1rem;
-    border: 1px solid rgba(159, 114, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .company-badge,
@@ -141,10 +140,10 @@
 }
 
 .period {
-    color: #b8b8ff;
+    color: #c9d2ea;
     display: block;
     text-align: right;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
 h4 {
@@ -153,8 +152,9 @@ h4 {
 }
 
 p {
-    color: #b8b8ff;
-    line-height: 1.6;
+    color: #d3daec;
+    line-height: 1.7;
+    font-size: 1rem;
     margin-top: 0.5rem;
 }
 
@@ -162,10 +162,10 @@ p {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1rem;
-    background: rgba(20, 20, 35, 0.6);
+    background: rgba(12, 16, 30, 0.9);
     padding: 1.5rem;
     border-radius: 8px;
-    border: 1px solid rgba(159, 114, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .info-item {
@@ -173,8 +173,9 @@ p {
     align-items: center;
     gap: 1rem;
     padding: 0.8rem;
-    background: rgba(30, 30, 50, 0.4);
+    background: rgba(18, 24, 42, 0.85);
     border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .info-item i {
@@ -185,8 +186,15 @@ p {
 }
 
 .info-item a {
-    color: #e0e0ff;
+    color: #f0f3ff;
     text-decoration: none;
+    font-size: 1rem;
+}
+
+.info-item a:hover,
+.info-item a:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
 @media (max-width: 768px) {

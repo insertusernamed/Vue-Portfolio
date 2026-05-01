@@ -12,10 +12,9 @@
                         <div class="intro-text">
                             <h1>Hi, I'm <span>Daniel Yevtushenko</span></h1>
                             <p class="lead">
-                                A passionate full-stack developer focused on creating elegant, efficient, and
-                                user-centric
-                                digital solutions. Combining modern technology with creative problem-solving to build
-                                applications that make a difference.
+                                I build full-stack products with Vue, Java/Spring Boot, GraphQL, and Docker. Recent
+                                work includes a university scheduling platform, NASA Space Apps submissions, and a
+                                portfolio data pipeline that serves live project data from GitHub.
                             </p>
                             <a href="mailto:yevtushenkodan04@gmail.com" class="btn btn-primary btn-lg">
                                 Let's Connect
@@ -67,20 +66,20 @@ const skills = ref([
     {
         icon: 'icon ion-code',
         title: 'Full-Stack Development',
-        description: 'Experienced in modern web development using Vue.js, React, and Node.js. Building robust applications with TypeScript, Spring Boot, and cloud-native architectures. Proficient in both SQL and NoSQL databases.',
+        description: 'Built and shipped Vue + TypeScript frontends backed by Java/Spring Boot and Node services. Comfortable owning features across API contracts, database integration, and UI implementation.',
         core: 'Vue.js · React · Node.js · TypeScript'
     },
     {
         icon: 'icon ion-settings',
-        title: 'System Architecture',
-        description: 'Designing scalable distributed systems with a focus on microservices architecture and API design. Experienced in implementing domain-driven design principles and event-driven architectures.',
-        core: 'Microservices · API Design · System Architecture'
+        title: 'Data & API Design',
+        description: 'Designed a GraphQL layer that shapes GitHub data for frontend consumption, including filtering, caching, and resolver-based aggregation to keep the client simpler and faster.',
+        core: 'GraphQL · REST · Caching · Schema Design'
     },
     {
         icon: 'icon ion-cloud',
-        title: 'DevOps & Cloud',
-        description: 'Orchestrating cloud infrastructure on AWS and Azure. Implementing containerized solutions with Docker and Kubernetes, along with automated CI/CD pipelines using modern DevOps practices.',
-        core: 'AWS · Docker · Kubernetes · CI/CD'
+        title: 'Applied Product Work',
+        description: 'Delivered practical projects like a carpool app prototype, an e-commerce platform for plant sales, and simulation/data tools with production-style deployment workflows.',
+        core: 'Product Delivery · Docker · Vercel · Iteration'
     }
 ])
 </script>
@@ -109,6 +108,7 @@ const skills = ref([
     overflow-x: hidden;
     background-color: #0a0a0a;
     position: relative;
+    isolation: isolate;
 }
 
 .container-fluid {
@@ -149,15 +149,15 @@ const skills = ref([
 }
 
 .intro-text h1 span {
-    color: #9f72ff;
-    text-shadow: 0 0 15px rgba(159, 114, 255, 0.5);
+    color: #8f84ff;
+    text-shadow: none;
 }
 
 .intro-text .lead {
     max-width: 700px;
     margin: 0 auto 2rem;
-    color: #e0e0ff;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    color: #d0d6e8;
+    text-shadow: none;
     line-height: 1.8;
 }
 
@@ -168,21 +168,21 @@ const skills = ref([
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: transform 0.2s;
-    background: linear-gradient(135deg, #9f72ff 0%, #6d4aff 100%);
+    background: linear-gradient(135deg, #6479ff 0%, #4c60d8 100%);
     border: none;
-    box-shadow: 0 4px 15px rgba(159, 114, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(58, 90, 214, 0.25);
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(159, 114, 255, 0.5);
+    transform: none;
+    box-shadow: 0 4px 12px rgba(58, 90, 214, 0.25);
 }
 
 .skills-section {
     padding: 6rem 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(159, 114, 255, 0.1);
+    background: rgba(8, 10, 18, 0.92);
+    backdrop-filter: blur(6px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     width: 100%;
     position: relative;
 }
@@ -190,11 +190,11 @@ const skills = ref([
 .section-title {
     text-align: center;
     margin-bottom: 4rem;
-    color: #e0e0ff;
+    color: #e5e9f5;
     font-size: 2.5rem;
     padding-top: 76px;
     margin-top: -76px;
-    text-shadow: 0 0 10px rgba(159, 114, 255, 0.3);
+    text-shadow: none;
 }
 
 .row {
@@ -206,8 +206,8 @@ const skills = ref([
 .skill-card {
     height: 100%;
     margin: 0;
-    background: rgba(20, 20, 35, 0.6);
-    border: 1px solid rgba(159, 114, 255, 0.1);
+    background: rgba(14, 18, 30, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     padding: 2rem;
     border-radius: 10px;
@@ -216,38 +216,22 @@ const skills = ref([
     overflow: hidden;
 }
 
-.skill-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(159, 114, 255, 0.1), rgba(109, 74, 255, 0.1));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
 .skill-card:hover {
-    transform: translateY(-5px);
-    background: rgba(30, 30, 50, 0.8);
-    border-color: rgba(159, 114, 255, 0.3);
-    box-shadow: 0 8px 30px rgba(159, 114, 255, 0.2);
-}
-
-.skill-card:hover::before {
-    opacity: 1;
+    transform: none;
+    background: rgba(18, 22, 36, 0.95);
+    border-color: rgba(143, 132, 255, 0.25);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .core-tech {
-    color: #9f72ff;
+    color: #8f84ff;
     font-size: 0.95rem;
     margin: 0.5rem 0 1rem;
     letter-spacing: 0.5px;
 }
 
 .skill-description {
-    color: #b8b8ff;
+    color: #b6bfd8;
     line-height: 1.6;
     margin: 0;
 }
@@ -266,34 +250,34 @@ const skills = ref([
     font-size: 2.5rem;
     color: var(--accent-1);
     margin-bottom: 1.5rem;
-    background: linear-gradient(135deg, #9f72ff 0%, #6d4aff 100%);
+    background: linear-gradient(135deg, #8f84ff 0%, #6a81f2 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .skill-card h3 {
-    color: #e0e0ff;
+    color: #e5e9f5;
     margin-bottom: 1rem;
     font-size: 1.5rem;
-    text-shadow: 0 0 5px rgba(159, 114, 255, 0.3);
+    text-shadow: none;
 }
 
 .skill-card p {
-    color: #b8b8ff;
+    color: #b6bfd8;
     line-height: 1.6;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .intro-section {
-    background-color: var(--bg-intro);
     position: relative;
     padding: 0;
-    z-index: 2;
+    z-index: 1;
     background: transparent;
-    height: 100vh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
+    overflow: clip;
 }
 
 .intro-section::before {
@@ -304,9 +288,14 @@ const skills = ref([
     right: 0;
     bottom: 0;
     background: linear-gradient(to bottom,
-            rgba(0, 0, 0, 0.7) 0%,
-            rgba(20, 20, 35, 0.7) 100%);
-    z-index: -1;
+            rgba(4, 7, 14, 0.58) 0%,
+            rgba(8, 10, 18, 0.76) 100%);
+    z-index: 0;
+}
+
+.intro-section>* {
+    position: relative;
+    z-index: 1;
 }
 
 .section-separator {
@@ -327,7 +316,7 @@ const skills = ref([
 
     .intro-section {
         padding: 0;
-        min-height: 100vh;
+        min-height: 100svh;
         height: auto;
     }
 }

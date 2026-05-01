@@ -14,10 +14,10 @@
 
             <div v-else>
                 <!-- Pinned Projects Section -->
-                <div v-if="filteredPinned.length > 0" class="projects-group">
+                <div v-if="pinnedProjects.length > 0" class="projects-group">
                     <h3 class="group-title">Featured Projects</h3>
                     <div class="masonry-grid">
-                        <div class="masonry-item" v-for="project in filteredPinned" :key="project.name">
+                        <div class="masonry-item" v-for="project in pinnedProjects" :key="project.name">
                             <div class="project-card"
                                 :style="getProjectStyle(project.languages.nodes[0]?.color || '#666')">
                                 <!-- Project Screenshot -->
@@ -43,20 +43,18 @@
                                 <div class="project-content">
                                     <div class="project-header">
                                         <h3>{{ project.name }}</h3>
-                                        <div class="project-decoration"
-                                            :style="{ background: adjustColor(project.languages.nodes[0]?.color || '#666', 0.15) }">
-                                        </div>
                                     </div>
                                     <p>{{ project.description || 'No description available.' }}</p>
 
                                     <div class="languages-tags" v-if="project.languages.nodes.length > 0">
-                                        <span v-for="lang in getSortedLanguages(project.languages.nodes)"
-                                            :key="lang.name" class="language-tag" :style="{
-                                                backgroundColor: adjustColor(lang.color, 0.15),
-                                                borderColor: lang.color,
-                                                color: lang.color
-                                            }">
+                                        <span v-for="lang in getVisibleLanguages(project.languages.nodes)"
+                                            :key="lang.name" class="language-tag"
+                                            :style="getLanguageTagStyle(lang.color)">
                                             {{ lang.name }}
+                                        </span>
+                                        <span v-if="getRemainingLanguageCount(project.languages.nodes) > 0"
+                                            class="language-tag language-tag-more">
+                                            +{{ getRemainingLanguageCount(project.languages.nodes) }}
                                         </span>
                                     </div>
 
@@ -73,10 +71,10 @@
                 </div>
 
                 <!-- Other Projects Section -->
-                <div v-if="filteredOther.length > 0" class="projects-group">
+                <div v-if="otherProjects.length > 0" class="projects-group">
                     <h3 class="group-title">Other Projects</h3>
                     <div class="masonry-grid">
-                        <div class="masonry-item" v-for="project in filteredOther" :key="project.name">
+                        <div class="masonry-item" v-for="project in visibleOtherProjects" :key="project.name">
                             <div class="project-card"
                                 :style="getProjectStyle(project.languages.nodes[0]?.color || '#666')">
                                 <!-- Project Screenshot -->
@@ -102,20 +100,18 @@
                                 <div class="project-content">
                                     <div class="project-header">
                                         <h3>{{ project.name }}</h3>
-                                        <div class="project-decoration"
-                                            :style="{ background: adjustColor(project.languages.nodes[0]?.color || '#666', 0.15) }">
-                                        </div>
                                     </div>
                                     <p>{{ project.description || 'No description available.' }}</p>
 
                                     <div class="languages-tags" v-if="project.languages.nodes.length > 0">
-                                        <span v-for="lang in getSortedLanguages(project.languages.nodes)"
-                                            :key="lang.name" class="language-tag" :style="{
-                                                backgroundColor: adjustColor(lang.color, 0.15),
-                                                borderColor: lang.color,
-                                                color: lang.color
-                                            }">
+                                        <span v-for="lang in getVisibleLanguages(project.languages.nodes)"
+                                            :key="lang.name" class="language-tag"
+                                            :style="getLanguageTagStyle(lang.color)">
                                             {{ lang.name }}
+                                        </span>
+                                        <span v-if="getRemainingLanguageCount(project.languages.nodes) > 0"
+                                            class="language-tag language-tag-more">
+                                            +{{ getRemainingLanguageCount(project.languages.nodes) }}
                                         </span>
                                     </div>
 
@@ -129,6 +125,11 @@
                             </div>
                         </div>
                     </div>
+                    <div class="view-more-wrap" v-if="otherProjects.length > OTHER_PROJECTS_INITIAL_LIMIT">
+                        <button class="btn btn-secondary view-more-btn" @click="showAllOther = !showAllOther">
+                            {{ showAllOther ? 'Show Less' : 'View More' }}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -136,7 +137,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useGitHubStore } from '../stores/githubStore'
 import { useScreenshotStore } from '../stores/screenshotStore'
@@ -144,13 +145,13 @@ import { useScreenshotStore } from '../stores/screenshotStore'
 const githubStore = useGitHubStore()
 const screenshotStore = useScreenshotStore()
 const { pinnedProjects, otherProjects, loading, error } = storeToRefs(githubStore)
-const { screenshots, loading: screenshotLoading } = storeToRefs(screenshotStore)
+const OTHER_PROJECTS_INITIAL_LIMIT = 6
+const showAllOther = ref(false)
 
 const allProjects = computed(() => githubStore.allProjects)
-
-// for some reason the graphql query also returns a repo that i dont own that i may have contributed to back in college and i dont really want to display it
-const filteredPinned = computed(() => pinnedProjects.value.filter(p => !p.url.includes('gracegrace030')))
-const filteredOther = computed(() => otherProjects.value.filter(p => !p.url.includes('gracegrace030')))
+const visibleOtherProjects = computed(() =>
+    showAllOther.value ? otherProjects.value : otherProjects.value.slice(0, OTHER_PROJECTS_INITIAL_LIMIT)
+)
 
 onMounted(async () => {
     await githubStore.fetchProjects()
@@ -165,6 +166,14 @@ onUnmounted(() => {
 
 function getSortedLanguages(nodes: { name: string; color: string }[]) {
     return [...nodes].sort((a, b) => a.name.localeCompare(b.name))
+}
+
+function getVisibleLanguages(nodes: { name: string; color: string }[]) {
+    return getSortedLanguages(nodes).slice(0, 3)
+}
+
+function getRemainingLanguageCount(nodes: { name: string; color: string }[]) {
+    return Math.max(nodes.length - 3, 0)
 }
 
 function getProjectScreenshot(projectName: string) {
@@ -188,8 +197,16 @@ function onImageLoad(event: Event) {
 
 function getProjectStyle(color: string) {
     return {
-        background: `linear-gradient(145deg, var(--card-bg-dark) 0%, ${adjustColor(color, 0.05)} 100%)`,
-        borderLeft: `3px solid ${adjustColor(color, 0.7)}`
+        background: `linear-gradient(165deg, var(--card-bg-dark) 0%, ${adjustColor(color, 0.025)} 100%)`,
+        borderLeft: `1px solid ${adjustColor(color, 0.35)}`
+    }
+}
+
+function getLanguageTagStyle(color: string) {
+    return {
+        backgroundColor: adjustColor(color, 0.2),
+        borderColor: adjustColor(color, 0.7),
+        color: '#f8fbff'
     }
 }
 
@@ -225,6 +242,7 @@ function adjustColor(color: string, opacity: number): string {
 .masonry-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
     gap: 1.5rem;
     margin-top: 2rem;
 }
@@ -242,10 +260,9 @@ function adjustColor(color: string, opacity: number): string {
 }
 
 .masonry-item {
-    display: block;
+    display: flex;
     width: 100%;
-    margin-bottom: 1.5rem;
-    break-inside: avoid;
+    min-height: 100%;
 }
 
 .project-card {
@@ -255,51 +272,54 @@ function adjustColor(color: string, opacity: number): string {
     transition: all 0.3s ease;
     box-shadow: 0 4px 20px var(--card-shadow);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(6px);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
 }
 
 .project-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px var(--card-shadow);
+    transform: none;
+    box-shadow: 0 4px 20px var(--card-shadow);
 }
 
 .project-header {
-    position: relative;
-    margin-bottom: 1.5rem;
-}
-
-.project-decoration {
-    position: absolute;
-    top: -1.5rem;
-    right: -1.5rem;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    filter: blur(40px);
-    opacity: 0.15;
-    pointer-events: none;
+    margin-bottom: 0.8rem;
 }
 
 .project-content {
-    padding: 2rem;
-    position: relative;
-    z-index: 1;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .project-content h3 {
     color: var(--text-light);
-    margin-bottom: 1rem;
-    font-size: 1.4rem;
+    margin-bottom: 0.65rem;
+    font-size: 1.08rem;
     font-weight: 600;
     letter-spacing: -0.02em;
+    line-height: 1.3;
+    min-height: 2.8rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .project-content p {
     color: var(--text-code);
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    font-size: 0.86rem;
+    min-height: 4rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .loading-spinner {
@@ -331,23 +351,36 @@ function adjustColor(color: string, opacity: number): string {
 .languages-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+    min-height: 2rem;
 }
 
 .language-tag {
-    padding: 0.4rem 0.8rem;
+    padding: 0.28rem 0.58rem;
     border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.74rem;
+    font-weight: 600;
     border: 1px solid;
     transition: all 0.2s ease;
-    color: white !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
 }
 
 .language-tag:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.2);
+    transform: none;
+    filter: none;
+}
+
+.language-tag-more {
+    color: #9fb3d7 !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 .error-message {
@@ -358,30 +391,31 @@ function adjustColor(color: string, opacity: number): string {
 
 .button-group {
     display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
+    gap: 0.55rem;
+    margin-top: auto;
 }
 
 .btn {
-    padding: 0.6rem 1.2rem;
+    padding: 0.45rem 0.7rem;
     border-radius: 8px;
     font-weight: 500;
     transition: all 0.15s ease;
-    font-size: 0.9rem;
+    font-size: 0.68rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.35px;
     position: relative;
     top: 0;
+    white-space: nowrap;
 }
 
 .btn:active {
-    top: 2px;
+    top: 0;
 }
 
 .btn-primary {
     background: var(--gradient-primary);
     border: none;
-    box-shadow: 0 4px 15px var(--card-shadow);
+    box-shadow: 0 3px 10px rgba(56, 106, 255, 0.2);
 }
 
 .btn-primary:hover {
@@ -399,7 +433,7 @@ function adjustColor(color: string, opacity: number): string {
     position: relative;
     overflow: hidden;
     z-index: 1;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
 }
 
 .btn-secondary:hover {
@@ -418,7 +452,7 @@ function adjustColor(color: string, opacity: number): string {
     position: relative;
     overflow: hidden;
     border-radius: 16px 16px 0 0;
-    height: 200px;
+    height: 180px;
     background: rgba(0, 0, 0, 0.1);
 }
 
@@ -492,14 +526,45 @@ function adjustColor(color: string, opacity: number): string {
 }
 
 .projects-group {
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
 }
 
 .group-title {
     color: var(--text-light);
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
     text-align: center;
+}
+
+.view-more-wrap {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.view-more-btn {
+    min-width: 140px;
+}
+
+@media (max-width: 576px) {
+    .project-content {
+        padding: 1rem;
+    }
+
+    .project-content h3 {
+        font-size: 0.98rem;
+        min-height: 2.45rem;
+    }
+
+    .project-content p {
+        font-size: 0.8rem;
+        min-height: 3.7rem;
+        -webkit-line-clamp: 3;
+    }
+
+    .project-screenshot {
+        height: 150px;
+    }
 }
 </style>

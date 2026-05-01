@@ -28,8 +28,10 @@
 
 <style scoped>
 .portfolio-navbar {
-    background: var(--gradient-primary);
-    box-shadow: 0 2px 15px var(--card-shadow);
+    background: linear-gradient(90deg, rgba(72, 98, 224, 0.9) 0%, rgba(86, 112, 238, 0.9) 55%, rgba(64, 92, 210, 0.9) 100%);
+    box-shadow: 0 10px 30px rgba(6, 12, 28, 0.35);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .navbar {
@@ -39,12 +41,15 @@
 .logo {
     font-weight: 700;
     font-size: 1.2rem;
+    letter-spacing: 0.01em;
 }
 
 .nav-link {
     color: var(--text-light) !important;
     font-weight: 500;
-    padding: 0.5rem 1rem !important;
+    padding: 0.42rem 0.9rem !important;
+    border-radius: 999px;
+    transition: background-color 0.18s ease, color 0.18s ease;
 }
 
 .nav-link.active {
@@ -53,9 +58,8 @@
 }
 
 .nav-link:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    transition: all 0.3s ease;
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.18);
+    transform: none;
+    color: #ffffff !important;
 }
 </style>

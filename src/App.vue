@@ -1,8 +1,4 @@
 <template>
-
-    <head>
-        <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
-    </head>
     <div class="app-wrapper">
         <NavBar />
         <div class="main-content">
@@ -28,11 +24,17 @@ import FooterBar from './components/FooterBar.vue'
     box-sizing: border-box;
 }
 
+html,
+body {
+    overscroll-behavior-y: none;
+    background: #05070d;
+}
+
 body {
     font-family: 'Lato', sans-serif;
     line-height: 1.6;
     color: var(--text-primary);
-    background-color: var(--bg-intro);
+    background-color: #05070d;
 }
 
 .app-wrapper {

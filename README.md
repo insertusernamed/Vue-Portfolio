@@ -1,39 +1,37 @@
-# portfolio
+# Daniel Portfolio Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Vue 3 + TypeScript frontend for my personal portfolio.
 
-## Recommended IDE Setup
+## Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Dynamic project list from a GraphQL backend
+- Separate featured and additional project sections
+- Client-side caching for GitHub project data
+- Optional live screenshots for project demo URLs
 
-## Type Support for `.vue` Imports in TS
+## Environment Variables
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+Create `.env`:
 
-## Customize configuration
+```env
+VITE_GRAPHQL_ENDPOINT=https://your-domain/graphql
+VITE_SCREENSHOT_API_BASE=http://localhost:8080
+```
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+`VITE_SCREENSHOT_API_BASE` is optional and defaults to `http://localhost:8080`.
 
-## Project Setup
+## Scripts
 
 ```sh
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
 npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
 npm run lint
 ```
+
+## Stack
+
+- Vue 3 + Vue Router
+- Pinia
+- TypeScript
+- Vite

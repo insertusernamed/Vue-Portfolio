@@ -15,10 +15,11 @@
                 <div class="footer-section">
                     <h5>Connect</h5>
                     <div class="social-links">
-                        <a href="https://www.linkedin.com/in/daniel-yevtushenko" target="_blank" title="LinkedIn">
+                        <a href="https://www.linkedin.com/in/daniel-yevtushenko" target="_blank" rel="noopener"
+                            title="LinkedIn">
                             <LoadingIcon iconClass="icon ion-social-linkedin" />
                         </a>
-                        <a href="https://github.com/insertusernamed" target="_blank" title="GitHub">
+                        <a href="https://github.com/insertusernamed" target="_blank" rel="noopener" title="GitHub">
                             <LoadingIcon iconClass="icon ion-social-github" />
                         </a>
                     </div>
@@ -27,7 +28,7 @@
 
             <div class="footer-bottom">
                 <p class="copyright">
-                    © {{ new Date().getFullYear() }} Daniel Yevtushenko. Built with Vue.js
+                    © {{ new Date().getFullYear() }} Daniel Yevtushenko.
                 </p>
             </div>
         </div>
@@ -74,12 +75,15 @@ import LoadingIcon from './LoadingIcon.vue'
 }
 
 .footer-section a {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.92);
     text-decoration: none;
 }
 
-.footer-section a:hover {
+.footer-section a:hover,
+.footer-section a:focus-visible {
     color: var(--accent-4);
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
 .social-links {
@@ -93,7 +97,7 @@ import LoadingIcon from './LoadingIcon.vue'
 }
 
 .copyright {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.82);
     margin: 0;
 }
 

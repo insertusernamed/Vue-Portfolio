@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { ScreenshotProject } from '../types/screenshot'
 
-const SCREENSHOT_API_BASE = 'http://localhost:8080'
+const SCREENSHOT_API_BASE = import.meta.env.VITE_SCREENSHOT_API_BASE || 'http://localhost:8080'
 
 export async function fetchProjectScreenshots(
     projects: { name: string, preview_url?: string | null }[],
@@ -73,7 +73,9 @@ export async function fetchProjectScreenshots(
     })
 
     return screenshotProjects
-} export async function fetchSingleScreenshot(url: string): Promise<string | null> {
+}
+
+export async function fetchSingleScreenshot(url: string): Promise<string | null> {
     try {
         const response = await axios.get(
             `${SCREENSHOT_API_BASE}/screenshot?url=${encodeURIComponent(url)}`,
