@@ -1,0 +1,25 @@
+:root {
+  --bg: #0e0d0b;
+  --bg-2: #161410;
+  --ink: #f3eee4;
+  --ink-dim: #c9bfb1;
+  --ink-faint: #8f867a;
+  --line: #3a342b;
+  --accent: #e08948;
+  --accent-dim: #c56e32;
+  --accent-soft: rgba(212, 120, 58, 0.16);
+
+  --serif: 'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype', Palatino, serif;
+  --sans: 'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --page: min(1120px, calc(100% - 3rem));
+  --header-h: 3.85rem;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (max-width: 720px) {
+  :root {
+    --page: calc(100% - 2rem);
+  }
+}

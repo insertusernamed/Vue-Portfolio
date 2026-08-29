@@ -2,7 +2,7 @@ export interface GitHubProject {
     name: string
     description: string | null
     url: string
-    homepageUrl: string | null
+    homepageUrl?: string | null
     languages: {
         nodes: {
             name: string
